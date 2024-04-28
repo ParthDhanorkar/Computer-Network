@@ -1,0 +1,68 @@
+import java.io.*;
+import java.net.*;
+
+public class UDPPalindromeClient {
+    public static void main(String[] args) throws IOException{
+        DatagramSocket socket = new DatagramSocket();
+        InetAddress serveraddress = InetAddress.getByName("localhost");
+        int serverPort = 8956;
+
+        String var = "HmmH";
+
+        byte[] senddata = var.getBytes();
+        DatagramPacket sendpacket = new DatagramPacket(senddata,senddata.length,serveraddress,serverPort);
+        socket.send(sendpacket);
+
+        byte[] receivedata = new byte[1024];
+        DatagramPacket receivepacket = new DatagramPacket(receivedata,receivedata.length);
+        socket.receive(receivepacket);
+
+        String response = new String(receivepacket.getData(),0,receivepacket.getLength());
+        System.out.println("The word is :"+ response);
+
+
+        socket.close();
+
+    }
+}
+
+
+
+
+import java.io.*;
+import java.net.*;
+
+public class UDPPalindromeServer {
+    public static void main(String[] args ) throws IOException{
+        DatagramSocket socket = new DatagramSocket(8956);
+        System.out.println("Server started. Listening on port 8956...");
+
+        while(true){
+            byte[] receive = new byte[1024];
+            DatagramPacket receivepacket = new DatagramPacket(receive,receive.length);
+            socket.receive(receivepacket);
+
+            String pali = new String(receivepacket.getData(),0,receivepacket.getLength());
+            String rever = new StringBuilder(pali).reverse().toString();
+            
+            String result;
+            if(pali.equals(rever)){
+                result="pallindrome";
+            }
+            else{
+                result= "Not Palindrome";
+            }
+
+            InetAddress clientaddress = receivepacket.getAddress();
+            int clientport = receivepacket.getPort();
+
+            byte[] senddata = result.getBytes();
+            DatagramPacket sendpacket = new DatagramPacket(senddata,senddata.length,clientaddress,clientport);
+            socket.send(sendpacket);
+
+            socket.close();
+
+        }
+    }
+    
+}

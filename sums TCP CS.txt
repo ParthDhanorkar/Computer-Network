@@ -1,0 +1,55 @@
+import java.io.*;
+import java.net.*;
+
+public class Clientsum {
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("localhost",5487);
+        System.out.println("Connected to server.. ");
+
+        PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+        String inputline;
+        while((inputline=stdin.readLine())!=null){
+            out.println(inputline);
+            String response = in.readLine();
+            System.out.println("Server response: "+ response);
+            break;
+        }
+        out.close();
+        in.close();
+        stdin.close();
+        socket.close();
+    }   
+}
+
+
+
+import java.io.*;
+import java.net.*;
+
+public class Serversum {
+    public static void main(String[] args) throws IOException{
+        ServerSocket serversocket = new ServerSocket(5487);
+        System.out.println("Server is Started : ");
+
+        Socket clientsocket = serversocket.accept();
+        PrintWriter out = new PrintWriter(clientsocket.getOutputStream(),true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
+
+        String inputline;
+        while((inputline=in.readLine())!=null){
+            String[] number = inputline.split(" ");
+            int num1 = Integer.parseInt(number[0]);
+            int num2 = Integer.parseInt(number[1]);
+            int sum = num1+num2;
+            out.println(sum);
+        }
+
+        out.close();
+        in.close();
+        serversocket.close();
+        clientsocket.close();
+    }
+}

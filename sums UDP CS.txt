@@ -1,0 +1,67 @@
+import java.io.*;
+import java.net.*;
+
+public class UDPSumsClient {
+    public static void main(String[] args) throws IOException{
+        DatagramSocket socket = new DatagramSocket();
+        InetAddress serveraddress = InetAddress.getByName("localhost");
+        int serverport = 7845;
+
+            String num= "45 45";
+
+            byte[] data= num.getBytes();
+            DatagramPacket senddata = new DatagramPacket(data, data.length,serveraddress,serverport);
+            socket.send(senddata);
+
+            byte[] receive = new byte[1024];
+            DatagramPacket receivedata = new DatagramPacket(receive, receive.length);
+            socket.receive(receivedata);
+
+            String result = new String(receivedata.getData(),0,receivedata.getLength());
+            System.out.println("The sum of two number is : "+ result);
+
+            socket.close();
+    }    
+}
+
+
+
+
+
+
+
+
+import java.io.*;
+import java.net.*;
+
+public class UDPSumsServer {
+    public static void main(String[] args ) throws IOException{
+        DatagramSocket socket = new DatagramSocket(7845);
+        System.out.println("Server is Ready to Connect..");
+
+        while(true){
+            byte[] receive = new byte[1024];
+            DatagramPacket receivedata = new DatagramPacket(receive,receive.length);
+            socket.receive(receivedata);
+
+            String temp = new String(receivedata.getData(),0,receivedata.getLength());
+            String[] num = temp.split(" ");
+            int num1= Integer.parseInt(num[0]);
+            int num2= Integer.parseInt(num[1]);
+
+            int resu = num1 + num2;
+            String result = Integer.toString(resu);
+
+            InetAddress clInetAddress = receivedata.getAddress();
+            int clientport = receivedata.getPort();
+
+            byte[] sending = result.getBytes();
+            DatagramPacket sendpacket = new DatagramPacket(sending, sending.length,clInetAddress,clientport);
+            socket.send(sendpacket);
+
+            socket.close();
+
+        }
+    }
+    
+}

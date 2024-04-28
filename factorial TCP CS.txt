@@ -1,0 +1,75 @@
+import java.io.*;
+import java.net.*;
+
+public class FactorialClient {
+    public static void main(String[] args) throws IOException {
+        String serverAddress = "localhost";
+        int port = 8888;
+
+        Socket socket = new Socket(serverAddress, port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Connected to server. Enter a number to compute its factorial:");
+
+        String userInput;
+        while ((userInput = stdIn.readLine()) != null) {
+            out.println(userInput);
+            String response = in.readLine();
+            System.out.println("Factorial of " + userInput + " is: " + response);
+            System.out.println("Enter another number (or type 'exit' to quit):");
+            if (userInput.equals("exit")) break;
+        }
+
+        // Closing resources
+        out.close();
+        in.close();
+        stdIn.close();
+        socket.close();
+    }
+}
+
+
+
+
+import java.io.*;
+import java.net.*;
+
+public class Server1 {
+    public static void main(String[] args) throws IOException {
+        ServerSocket serversocket = new ServerSocket(8888);
+        System.out.println("Server started. Listening on port 8888.");
+
+        while (true) {
+            Socket clientSocket = serversocket.accept();
+            System.out.println("Client connected.");
+
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                // Calculate factorial
+                int number = Integer.parseInt(inputLine);
+                int factorial = calculateFactorial(number);
+
+                // Send the result back to the client
+                out.println(factorial);
+            }
+
+            out.close();
+            in.close();
+            clientSocket.close();
+            serversocket.close();
+            System.out.println("Client disconnected.");
+        }
+    }
+
+    private static int calculateFactorial(int n) {
+        if (n == 0)
+            return 1;
+        else
+            return n * calculateFactorial(n - 1);
+    }
+}

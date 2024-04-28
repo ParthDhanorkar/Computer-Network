@@ -1,0 +1,17 @@
+Tcp dump:-
+sudo apt-get install tcpdump
+tcpdump -D
+sudo tcpdump -n
+sudo tcpdump -v -n
+sudo tcpdump -n tcp
+sudo tcpdump -n icmp
+sudo tcpdump -n dst 172.16.92.1
+sudo tcpdump -n port 80
+sudo tcpdump udp and src port 53
+sudo tcpdump -n portrange 1-80
+sudo tcpdump -n src port 443
+sudo tcpdump port 80 -w capture_file
+sudo tcpdump -r capture_file
+sudo tcpdump -nnvvS src 10.5.2.3 and dst port 3389
+sudo tcpdump -nvX src net 192.168.0.0/16 and dst net 10.0.0.0/8 or 172.16.0.0/16
+sudo tcpdump dst 192.168.0.2 and src net and not icmp

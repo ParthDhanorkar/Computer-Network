@@ -1,0 +1,61 @@
+import java.io.*;
+import java.net.*;
+
+public class Clientpalindrome {
+    public static void main(String[] args) throws IOException{
+        Socket socket = new Socket("localhost",9654);
+
+        PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Connected to Server. Enter a number to check if it's a Pallindrome");
+
+        String userinput;
+        while((userinput=stdin.readLine())!=null){
+            out.println(userinput);
+            String response = in.readLine();
+            System.out.println("Server response : "+response);
+            System.out.println("Enter another number (or type 'exit' to quit):");
+            if (userinput.equals("exit")) break;
+            
+        }
+        out.close();
+        in.close();
+        stdin.close();
+        socket.close();
+    }
+}
+
+
+
+import java.io.*;
+import java.net.*;
+
+public class SeverPallindrome {
+    public static void main(String[] args) throws IOException{
+        ServerSocket serversocket = new ServerSocket(9654);
+        System.out.println("Server started. Listening on port 9654");
+
+        while(true){
+            Socket clientsocket = serversocket.accept();
+            System.out.println("Client Connected... ");
+
+            PrintWriter out = new PrintWriter(clientsocket.getOutputStream(),true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
+
+            String inputline;
+            while ((inputline = in.readLine())!=null){
+                String reversed = new StringBuilder(inputline).reverse().toString();
+                boolean ispallindrome = inputline.equals(reversed);
+
+                out.println(ispallindrome ? "Palindrome": "Not Pallindrome");
+            }
+            out.close();
+            in.close();
+            clientsocket.close();
+            serversocket.close();
+            System.out.println("Client Disconnected.");
+        }
+    }
+}

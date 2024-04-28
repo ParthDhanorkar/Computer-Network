@@ -1,0 +1,18 @@
+Basic commands:
+1) Route 
+	a) route -n		b) route -Cn		c) route del default
+	d) ip – 4 route	e) ip -6 route 
+2) host
+	a)  host -a geeksforgeeks.org		b) host -t ns geeksforgeeks.org
+	c) host -t SOA geeksforgeeks.org		d) host -C geeksforgeeks.org
+	e) host -R 3 geeksforgeeks.org
+3) arp 
+	a) arp -a 		b) arp -v			c) arp -n
+	d) arp -e		e) arp -d
+4) hostname
+	a) hostname -a		b) hostname -b
+	c) hostname -d		d) hostname -i
+	e) hostname -s
+5) net stat 
+	a) netstat -a 		b) netstat -au		c) netstat -lu
+	d) netstat -lx		e) netstat -s
